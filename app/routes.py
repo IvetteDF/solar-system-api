@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify
+import requests
 
 class Planet:
     def __init__(self, id, name, description, moons):
@@ -40,3 +41,17 @@ def handle_planet(id):
                 "description" : planet.description,
                 "moons" : planet.moons,
                 }
+
+def get_response(planet):
+    path = "https://api.le-systeme-solaire.net/rest/bodies/"
+
+    query_params = {
+    "filter[]" : f"englishName,eq,{planet}"
+    }
+
+    response = requests.get(path, params=query_params).json()
+    print(response)
+    print()
+
+get_response("mars")
+get_response("venus")
