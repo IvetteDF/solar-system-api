@@ -27,15 +27,34 @@ def handle_planets():
 
         return make_response(f"Planet {new_planet.name} was successfully created", 201)
 
-@planets_bp.route("/<id>", methods=["GET"])
+@planets_bp.route("/<id>", methods=["GET", "PUT", "DELETE"])
 def handle_planet(id):
     planet = Planet.query.get(id)
-    return {
-        "id" : planet.id,
-        "name" : planet.name,
-        "description" : planet.description,
-        "moons" : planet.moons,
-        }
+
+    if request.method == "GET":
+        return {
+            "id" : planet.id,
+            "name" : planet.name,
+            "description" : planet.description,
+            "moons" : planet.moons,
+            }
+    elif request.method == "PUT":
+        request_body = request.get_json()
+
+        planet.name = request_body["name"]
+        planet.description = request_body["description"]
+        planet.moons = request_body["moons"]
+
+        db.session.commit()
+
+        return jsonify(f"Planet {planet.name} successfully updated!"), 200
+    elif request.method == "DELETE":
+        db.session.delete(planet)
+        db.session.commit()
+
+        return jsonify(f"Planet {planet.name} successfully deleted!"), 200
+
+
 
 # def get_response(planet):
 #     path = "https://api.le-systeme-solaire.net/rest/bodies/"
