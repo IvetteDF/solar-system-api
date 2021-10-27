@@ -30,7 +30,9 @@ def handle_planets():
 @planets_bp.route("/<id>", methods=["GET", "PUT", "DELETE"])
 def handle_planet(id):
     planet = Planet.query.get(id)
-
+    if planet is None:
+        return jsonify(f"Error: Plannet #{id} not found"), 404
+        
     if request.method == "GET":
         return {
             "id" : planet.id,
