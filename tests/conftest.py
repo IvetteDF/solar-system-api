@@ -18,4 +18,12 @@ def app():
 def client(app):
     return app.test_client()
 
+@pytest.fixture
+def two_planets(app):
+    venus = Planet(name="venus", description="hottie w a body", moons=0)
+    earth = Planet(name="earth", description="in her flop era", moons=1)
+
+    db.session.add_all([venus, earth])
+    db.session.commit()
+
 

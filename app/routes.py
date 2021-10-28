@@ -25,13 +25,13 @@ def handle_planets():
         db.session.add(new_planet)
         db.session.commit()
 
-        return make_response(f"Planet {new_planet.name} was successfully created", 201)
+        return jsonify(f"Planet {new_planet.name} was successfully created"), 201
 
 @planets_bp.route("/<id>", methods=["GET", "PUT", "DELETE"])
 def handle_planet(id):
     planet = Planet.query.get(id)
     if planet is None:
-        return jsonify(f"Error: Plannet #{id} not found"), 404
+        return jsonify(f"Error: Planet #{id} not found"), 404
         
     if request.method == "GET":
         return {
